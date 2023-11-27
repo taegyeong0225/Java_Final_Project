@@ -380,7 +380,7 @@
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="btnSearch" max="32767" attributes="0"/>
+                                  <Component id="btnLoanSearch" max="32767" attributes="0"/>
                                   <Component id="btnReturn" pref="78" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -396,7 +396,7 @@
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="cboBookSearch" alignment="1" pref="35" max="32767" attributes="0"/>
                           <Component id="txtSearch" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnSearch" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnLoanSearch" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
@@ -437,12 +437,12 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtSearch">
             </Component>
-            <Component class="javax.swing.JButton" name="btnSearch">
+            <Component class="javax.swing.JButton" name="btnLoanSearch">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#xac80;&#xc0c9;"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSearchActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoanSearchActionPerformed"/>
               </Events>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -496,6 +496,9 @@
                       <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="table_LoanSearchMouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

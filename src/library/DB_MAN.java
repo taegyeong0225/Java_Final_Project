@@ -14,9 +14,9 @@ import java.io.*;
 
 public class DB_MAN extends javax.swing.JFrame {
     String strDriver = "com.mysql.cj.jdbc.Driver";
-    String strURL = "jdbc:mysql://192.168.0.30:3306/[DB명]?characterEncoding=UTF-8&serverTimezone=UTC";
-    String strUser = "ktk";
-    String strPWD = "2022ktk";
+    String strURL = "jdbc:mysql://localhost:3306/JavaBook?characterEncoding=UTF-8&serverTimezone=UTC";
+    String strUser = "root";
+    String strPWD = "0000";
 
     Connection DB_con;
     Statement DB_stmt;

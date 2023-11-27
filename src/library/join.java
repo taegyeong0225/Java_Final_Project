@@ -248,7 +248,7 @@ public class join extends javax.swing.JFrame {
                             generateCaptcha();
                             return;
                         }
-                        String strQuery = "INSERT INTO admin ('adminId', 'adminPw') VALUES ('" + adminID + "', '" + adminPW + "');";
+                        String strQuery = "INSERT INTO admin (adminID, adminPW) VALUES ('" + adminID + "', '" + adminPW + "');";
                         DBM.dbOpen();
                         DBM.DB_stmt.executeUpdate(strQuery);
                         DBM.dbClose();

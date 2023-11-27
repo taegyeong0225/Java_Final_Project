@@ -12,7 +12,6 @@ import java.util.Date;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.table.DefaultTableModel;
 
-import javax.swing.JDialog;
         
 public class MainManageBook extends javax.swing.JFrame {
     DB_MAN DBM = new DB_MAN();
@@ -29,7 +28,7 @@ public class MainManageBook extends javax.swing.JFrame {
             DBM.dbOpen();
             GetBookInfoData_Basic(SQL_SELECT_book);
             GetLoanInfoData_Basic(SQL_SELECT_loan);
-            GetUserInfoData_Basic(SQL_SELECT_user);
+            GetUserInfoData_Basic(SQL_SELECT_user);`
             DBM.dbClose();
         } catch(Exception e) {
             System.out.println("SQLException : " + e.getMessage());
@@ -92,7 +91,7 @@ public class MainManageBook extends javax.swing.JFrame {
         tabBorrow = new javax.swing.JPanel();
         cboBookSearch = new javax.swing.JComboBox<>();
         txtSearch = new javax.swing.JTextField();
-        btnSearch = new javax.swing.JButton();
+        btnLoanSearch = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         table_LoanSearch = new javax.swing.JTable();
         lblID = new javax.swing.JLabel();
@@ -299,10 +298,10 @@ public class MainManageBook extends javax.swing.JFrame {
 
         cboBookSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "전체", "도서 번호", "제목", "작가", "출판사" }));
 
-        btnSearch.setText("검색");
-        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+        btnLoanSearch.setText("검색");
+        btnLoanSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchActionPerformed(evt);
+                btnLoanSearchActionPerformed(evt);
             }
         });
 
@@ -323,6 +322,11 @@ public class MainManageBook extends javax.swing.JFrame {
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+        });
+        table_LoanSearch.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_LoanSearchMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(table_LoanSearch);
@@ -377,7 +381,7 @@ public class MainManageBook extends javax.swing.JFrame {
                                 .addComponent(btnBorrow, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(tabBorrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnLoanSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnReturn, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE))))
                 .addGap(18, 18, 18))
         );
@@ -388,7 +392,7 @@ public class MainManageBook extends javax.swing.JFrame {
                 .addGroup(tabBorrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(cboBookSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
                     .addComponent(txtSearch, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSearch, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnLoanSearch, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(tabBorrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, tabBorrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -654,9 +658,41 @@ public class MainManageBook extends javax.swing.JFrame {
         } 
     }//GEN-LAST:event_jDiaAdd_btnAddActionPerformed
 
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSearchActionPerformed
+    private void btnLoanSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoanSearchActionPerformed
+        boolean lUidCheck;
+        boolean bNoCheck; 
+        String loanSearch = txtLoanSearch.getText().trim(); 
+        if(!loanSearch.equals("")) { 
+            switch(cboLoanSearch.getSelectedIndex()) { 
+                case 0: 
+                    String strQuery = SQL_SELECT_loan; 
+                    GetLoanInfoData_Serach(strQuery); 
+                    break;
+                case 1: 
+                    bNoCheck = GetBookNumber(loanSearch); 
+                    if(bNoCheck) { 
+                        strQuery = SQL_SELECT_loan + "WHERE bNo = '" + loanSearch + "';"; 
+                        GetLoanInfoData_Serach(strQuery); 
+                    } else { 
+                        showMessageDialog(null, "검색한 도서가 존재하지 않습니다.");
+                    }
+                    break; 
+                case 2: 
+                    lUidCheck = GetUser(loanSearch);
+                    if(lUidCheck) { 
+                        strQuery = SQL_SELECT_loan + "WHERE userID = '" + loanSearch + "';"; 
+                        GetLoanInfoData_Serach(strQuery); 
+                    } else {
+                        showMessageDialog(null, "검색한 아이디가 존재하지 않습니다.");
+                    }
+                    break; 
+                default: 
+                    break; 
+                } 
+            } else { 
+                showMessageDialog(null, "입력을 완료해주십시오.");    
+            }
+    }//GEN-LAST:event_btnLoanSearchActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         jDiaEdit.setSize(550, 400);
@@ -676,8 +712,36 @@ public class MainManageBook extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
-         
+        // 반납 버튼
+        String userID = txtID.getText().trim(); 
+        String bookNum = txtBNo.getText().trim(); 
+        boolean userIOdueCheck = GetUserOdue(userID);
+        boolean bLoanCheck = GetBookLoan(bookNum);
+        boolean loanCurrectCheck = GetLoanCurrect(bookNum, userID);
+        
+        if(!userID.equals("") && !bookNum.equals("")) { 
+            if(!bLoanCheck && loanCurrectCheck) {
+                String strSQL = "DELETE FROM loan_db WHERE bNo = '" + bookNum + "'AND userID = '" + userID + "';";
+                SQL_UPDATE_loan(strSQL);
+                
+                strSQL = "UPDATE book SET available = '1' WHERE bNo = '" + bookNum + "';";
+                SQL_UPDATE_book(strSQL);
+                txtID.setText("");
+            }
+        }
     }//GEN-LAST:event_btnReturnActionPerformed
+
+    private void table_LoanSearchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_LoanSearchMouseClicked
+        // 대출/반납 : 테이블 클릭서 선택됨
+        int iCntRow;
+        String iCntRow_bNo;
+        String iCntRow_userID;
+        iCntRow = table_LoanSearch.getSelectedRow();
+        iCntRow_bNo = table_LoanSearch.getValueAt(iCntRow, 0).toString();
+        iCntRow_userID = table_LoanSearch.getValueAt(iCntRow, 1).toString();
+        txtID.setText(iCntRow_userID);
+        txtBNo.setText(iCntRow_bNo);
+    }//GEN-LAST:event_table_LoanSearchMouseClicked
     
     public void GetBookInfoData_Basic(String strQuery) {
         String strSQL = "SELECT COUNT(bNO) as count FROM book;"; 
@@ -795,19 +859,7 @@ public class MainManageBook extends javax.swing.JFrame {
         }
         return true;
     }
-    
-    private void SQL_UPDATE_loan(String strSQL) {
-        try {
-            DBM.dbOpen();
-            DBM.DB_stmt.executeUpdate(strQuery);
-            InitTableLoanSearch();
-            GetLoanInfoData_Basic(SQL_SELECT_loan);
-            DBM.dbClose();
-        } catch(Exception e) {
-            System.out.println("SQLException : " + e.getMessage());
-            System.out.println("SQL_UPDATE_loan"); 
-        }
-    }
+
     
     
     private boolean GetBookLoan(String bookNum) {
@@ -839,9 +891,24 @@ public class MainManageBook extends javax.swing.JFrame {
             DBM.dbClose();
         } catch(Exception e) {
             System.out.println("SQLException : " + e.getMessage());
-            System.out.println("SQL_UPDATE_bookDB");
+            System.out.println("SQL_UPDATE_book");
         } 
     }
+    
+    private void SQL_UPDATE_loan(String strSQL) {
+        // 대출 반납 탭에서의 업데이트 
+        try {
+            DBM.dbOpen();
+            DBM.DB_stmt.executeUpdate(strQuery);
+            InitTableLoanSearch();
+            GetLoanInfoData_Basic(SQL_SELECT_loan);
+            DBM.dbClose();
+        } catch(Exception e) {
+            System.out.println("SQLException : " + e.getMessage());
+            System.out.println("SQL_UPDATE_loan"); 
+        }
+    }
+    
     
     public void InitTableBookSearch() {
         // 검색 결과 출력을 위해 도서 관리 테이블을 비움
@@ -899,8 +966,8 @@ public class MainManageBook extends javax.swing.JFrame {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnBorrow;
     private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnLoanSearch;
     private javax.swing.JButton btnReturn;
-    private javax.swing.JButton btnSearch;
     private javax.swing.JComboBox<String> cboBookSearch;
     private javax.swing.JTextField edit_txtAuthor;
     private javax.swing.JTextField edit_txtBNo;
